@@ -1,0 +1,18 @@
+app = "trash-cleanup-db"
+primary_region = "iad"
+
+[build]
+  image = "postgis/postgis:16-3.4-alpine"
+
+[env]
+  POSTGRES_DB = "trash_cleanup"
+  POSTGRES_USER = "trash"
+  # POSTGRES_PASSWORD is set as a secret:
+  #   fly secrets set POSTGRES_PASSWORD="your-strong-password" -a trash-cleanup-db
+
+# No [http_service] — the DB is only reachable within Fly's private network
+# at: trash-cleanup-db.internal:5432
+
+[[mounts]]
+  source = "pgdata"
+  destination = "/var/lib/postgresql/data"

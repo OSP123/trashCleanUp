@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const pinsRoutes = require("./routes/pins");
 const cleanupsRoutes = require("./routes/cleanups");
 const territoriesRoutes = require("./routes/territories");
@@ -39,7 +40,7 @@ function createApp() {
   const app = express();
   app.use(express.json({ limit: "2mb" }));
 
-  // Serve uploaded files statically
+  // Serve uploaded files statically (no /api prefix — these are direct asset URLs)
   app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
   app.use((req, res, next) => {
@@ -55,12 +56,15 @@ function createApp() {
     return next();
   });
 
-  app.get("/health", (_req, res) => {
+  // All API routes mounted under /api
+  const apiRouter = express.Router();
+
+  apiRouter.get("/health", (_req, res) => {
     res.json({ ok: true });
   });
 
   // File upload endpoint
-  app.post("/upload", upload.single("file"), (req, res) => {
+  apiRouter.post("/upload", upload.single("file"), (req, res) => {
     console.log("📤 Upload request received:", { filename: req.file?.filename });
     if (!req.file) {
       console.error("❌ No file in upload request");
@@ -71,14 +75,25 @@ function createApp() {
     res.json({ url: fileUrl });
   });
 
-  app.use("/users", usersRoutes);
-  app.use("/squads", squadsRoutes);
-  app.use("/pins", pinsRoutes);
-  app.use("/cleanups", cleanupsRoutes);
-  app.use("/territories", territoriesRoutes);
-  app.use("/raids", raidsRoutes);
-  app.use("/leaderboards", leaderboardsRoutes);
-  app.use("/collections", collectionsRoutes);
+  apiRouter.use("/users", usersRoutes);
+  apiRouter.use("/squads", squadsRoutes);
+  apiRouter.use("/pins", pinsRoutes);
+  apiRouter.use("/cleanups", cleanupsRoutes);
+  apiRouter.use("/territories", territoriesRoutes);
+  apiRouter.use("/raids", raidsRoutes);
+  apiRouter.use("/leaderboards", leaderboardsRoutes);
+  apiRouter.use("/collections", collectionsRoutes);
+
+  app.use("/api", apiRouter);
+
+  // Serve built frontend in production (Docker)
+  const publicPath = path.join(__dirname, "../public");
+  if (fs.existsSync(publicPath)) {
+    app.use(express.static(publicPath));
+    app.get("*", (_req, res) => {
+      res.sendFile(path.join(publicPath, "index.html"));
+    });
+  }
 
   app.use((err, _req, res, _next) => {
     res.status(500).json({

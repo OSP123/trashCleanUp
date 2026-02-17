@@ -1,0 +1,25 @@
+app = "trash-cleanup"
+primary_region = "iad"
+
+[build]
+
+[env]
+  PORT = "4000"
+  NODE_ENV = "production"
+  # DATABASE_URL is set as a secret:
+  #   fly secrets set DATABASE_URL="postgresql://trash:PASSWORD@trash-cleanup-db.internal:5432/trash_cleanup"
+
+[http_service]
+  internal_port = 4000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[mounts]]
+  source = "uploads_data"
+  destination = "/app/uploads"
+
+[deploy]
+  # Run migrations before the new instance starts (DATABASE_URL is injected by Fly)
+  release_command = "npm run migrate"
