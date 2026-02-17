@@ -7,6 +7,7 @@ primary_region = "iad"
 [env]
   POSTGRES_DB = "trash_cleanup"
   POSTGRES_USER = "trash"
+  PGDATA = "/data/postgres"
   # POSTGRES_PASSWORD is set as a secret:
   #   fly secrets set POSTGRES_PASSWORD="your-strong-password" -a trash-cleanup-db
 
@@ -15,7 +16,7 @@ primary_region = "iad"
 
 [[mounts]]
   source = "pgdata"
-  destination = "/var/lib/postgresql/data"
+  destination = "/data"
 
 [[vm]]
   memory = "512mb"
