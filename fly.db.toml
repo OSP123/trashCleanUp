@@ -2,7 +2,7 @@ app = "trash-cleanup-db"
 primary_region = "iad"
 
 [build]
-  image = "postgis/postgis:16-3.4-alpine"
+  dockerfile = "Dockerfile.db"
 
 [env]
   POSTGRES_DB = "trash_cleanup"

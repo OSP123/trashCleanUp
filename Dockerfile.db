@@ -1,0 +1,7 @@
+FROM postgis/postgis:16-3.4-alpine
+
+COPY db-entrypoint.sh /usr/local/bin/db-entrypoint.sh
+RUN chmod +x /usr/local/bin/db-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/db-entrypoint.sh"]
+CMD ["postgres"]
