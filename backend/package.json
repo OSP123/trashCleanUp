@@ -1,0 +1,25 @@
+{
+  "name": "trash-cleanup-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "migrate": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "test": "jest"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^4.19.2",
+    "multer": "^2.0.2",
+    "node-pg-migrate": "^7.6.2",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "supertest": "^6.3.4"
+  }
+}

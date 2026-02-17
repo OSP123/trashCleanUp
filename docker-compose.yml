@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: trash_cleanup_db
+    environment:
+      POSTGRES_DB: trash_cleanup
+      POSTGRES_USER: trash
+      POSTGRES_PASSWORD: trash
+    ports:
+      - "5433:5432"
+    volumes:
+      - trash_cleanup_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trash -d trash_cleanup"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  trash_cleanup_db_data:

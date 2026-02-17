@@ -1,0 +1,13 @@
+{
+  "name": "trash-cleanup",
+  "private": true,
+  "scripts": {
+    "frontend:dev": "npm --prefix frontend run dev",
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:preview": "npm --prefix frontend run preview -- --port 5173",
+    "frontend:test": "npm --prefix frontend run test",
+    "frontend:verify": "node scripts/verify-frontend-build.js",
+    "backend:test": "npm --prefix backend run test",
+    "test": "npm run backend:test && npm run frontend:test"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "migrations-dir": "migrations",
+  "direction": "up",
+  "schema": "public",
+  "database-url-var": "DATABASE_URL"
+}
